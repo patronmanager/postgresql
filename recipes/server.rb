@@ -75,6 +75,13 @@ template "#{node['postgresql']['dir']}/pg_hba.conf" do
   notifies change_notify, 'service[postgresql]', :immediately
 end
 
+service "postgresql" do
+  service_name node['postgresql']['server']['service_name']
+  supports :restart => true, :status => true, :reload => true
+  action [:enable, :start]
+end
+
+
 # NOTE: Consider two facts before modifying "assign-postgres-password":
 # (1) Passing the "ALTER ROLE ..." through the psql command only works
 #     if passwordless authorization was configured for local connections.
