@@ -48,17 +48,10 @@ else
   node.save
 end
 
-# Include the right "family" recipe for installing the server
-# since they do things slightly differently.
-case node['platform_family']
-when "rhel", "fedora", "suse"
-  include_recipe "postgresql::server_redhat"
-when "debian"
-  include_recipe "postgresql::server_debian"
-end
-
 change_notify = node['postgresql']['server']['config_change_notify']
 
+#postgresql.conf needs to be created before installing the packages since
+#some platforms start the postgres daemon during package installation
 template "#{node['postgresql']['dir']}/postgresql.conf" do
   source "postgresql.conf.erb"
   owner "postgres"
@@ -73,6 +66,16 @@ template "#{node['postgresql']['dir']}/pg_hba.conf" do
   group "postgres"
   mode 00600
   notifies change_notify, 'service[postgresql]', :immediately
+end
+
+
+# Include the right "family" recipe for installing the server
+# since they do things slightly differently.
+case node['platform_family']
+  when "rhel", "fedora", "suse"
+    include_recipe "postgresql::server_redhat"
+  when "debian"
+    include_recipe "postgresql::server_debian"
 end
 
 service "postgresql" do
