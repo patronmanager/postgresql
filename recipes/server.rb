@@ -52,6 +52,13 @@ change_notify = node['postgresql']['server']['config_change_notify']
 
 #postgresql.conf needs to be created before installing the packages since
 #some platforms start the postgres daemon during package installation
+directory "#{node['postgresql']['dir']}" do
+  recursive true
+  owner "postgres"
+  group "postgres"
+  mode 755
+end
+
 template "#{node['postgresql']['dir']}/postgresql.conf" do
   source "postgresql.conf.erb"
   owner "postgres"
