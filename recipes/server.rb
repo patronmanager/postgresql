@@ -54,23 +54,23 @@ change_notify = node['postgresql']['server']['config_change_notify']
 #some platforms start the postgres daemon during package installation
 directory "#{node['postgresql']['dir']}" do
   recursive true
-  owner "postgres"
-  group "postgres"
-  mode 755
+  owner 107
+  group 113
+  mode "755"
 end
 
 template "#{node['postgresql']['dir']}/postgresql.conf" do
   source "postgresql.conf.erb"
-  owner "postgres"
-  group "postgres"
+  owner 107
+  group 113
   mode 0600
   notifies change_notify, 'service[postgresql]'
 end
 
 template "#{node['postgresql']['dir']}/pg_hba.conf" do
   source "pg_hba.conf.erb"
-  owner "postgres"
-  group "postgres"
+  owner 107
+  group 113
   mode 00600
   notifies change_notify, 'service[postgresql]'
 end
