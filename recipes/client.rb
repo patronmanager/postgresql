@@ -31,7 +31,7 @@ if(node['postgresql']['enable_pgdg_yum'])
   include_recipe 'postgresql::yum_pgdg_postgresql'
 end
 
-Chef::Log.info("CLIENT PACKAGES: Hey I'm #{node['postgresql']['client']['packages']}")
+Chef::Log.info("CLIENT PACKAGES: #{node['postgresql'].inspect}")
 node['postgresql']['client']['packages'].each do |pg_pack|
 
   package pg_pack
